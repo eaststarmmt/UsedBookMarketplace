@@ -139,6 +139,18 @@ public class User implements AdminAndUser {
 	     		System.out.println(rs.getString(1)+ "	"+ rs.getString(2) + "	" +rs.getString(3)+ "		"+rs.getString(4)+ "	"+rs.getString(5)+ "	"+rs.getString(6)+ "		"+rs.getString(7)+ "	"+rs.getString(8));
 	     	}
 	     	stmt.close();
+	     	System.out.println();
+	     	System.out.println("1.구매 2.돌아가기");
+	     	choose = sc.nextInt();
+	     	switch (choose) {
+	     	case 1:
+	     		Purchase(id, password);
+	     		break;
+	     		
+	     	case 2:
+	     		Login(id, password);
+	     		break;
+	     	}
 	    
 		} catch(ClassNotFoundException e) {
 	    	System.out.println("드라이버 로딩 실패");
@@ -384,6 +396,39 @@ public class User implements AdminAndUser {
 	     	stmt.close();
 	    
 		} catch(ClassNotFoundException e) {
+	    	System.out.println("드라이버 로딩 실패");
+	    } catch(SQLException e) {
+	   		System.out.println("에러: "+ e);
+	   	} finally {
+	    	try {
+	    		if(conn != null && !conn.isClosed()) {
+	    			conn.close();
+	    		}
+	    	} catch(SQLException e) {
+	    		e.printStackTrace();
+	    	}
+	    }
+	}
+	public void Purchase(String id, String password) {
+		Connection conn = null;
+		Statement stmt = null;
+		ResultSet rs = null;
+
+		try {
+			Class.forName("com.mysql.cj.jdbc.Driver");
+	     	conn = DriverManager.getConnection(url, dbId, dbPassword);
+	     	System.out.println();
+	     	System.out.print("구매할 책 제목: ");
+	     	String name = sc.next();
+	     	String sql = "select * from user where id = (select user_id from book where name = \"" + name + "\")";
+	     	System.out.println(sql);
+	     	stmt = conn.createStatement();
+	     	rs = stmt.executeQuery(sql);
+	     	rs.next();
+	     	System.out.println(rs.getString("email")+ "로 메일 전송");
+	     	stmt.close();
+	     	Login(id, password);
+	    } catch(ClassNotFoundException e) {
 	    	System.out.println("드라이버 로딩 실패");
 	    } catch(SQLException e) {
 	   		System.out.println("에러: "+ e);
