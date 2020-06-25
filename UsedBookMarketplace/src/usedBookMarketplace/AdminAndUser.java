@@ -7,5 +7,5 @@ public interface AdminAndUser {
 	public static final String dbId = "root";
 	public static final String dbPassword = "rlaas7490!";
 	void Login(String id, String password);
-	void Search(String keyword);
+	void Search(String id, String password);
 }

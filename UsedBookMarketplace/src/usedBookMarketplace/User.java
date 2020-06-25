@@ -5,7 +5,7 @@ import java.util.Scanner;
 
 public class User implements AdminAndUser {
 	static Scanner sc = new Scanner(System.in);
-
+	
 	public void Login(String id, String password) {	// 로그인 후 첫 화면
 		Connection conn = null;
 		Statement stmt = null;
@@ -31,15 +31,15 @@ public class User implements AdminAndUser {
 	     			break;
 	     			
 	     		case 2:
-	     			Search(id);
+	     			Search(id, password);
 	     			stmt.close();
 	     			break;
 	     		case 3:
-	     			RegisterBook(id);
+	     			RegisterBook(id, password);
 	     			stmt.close();
 	     			break;
 	     		case 4:
-	     			LisgtingBook(id);
+	     			ListingBook(id, password);
 	     			stmt.close();
 	     			break;
 	     		case 5:
@@ -61,7 +61,7 @@ public class User implements AdminAndUser {
 	    }
 	}
 	
-	private void UserRegistration(String id, String password) {	// 사용자 정보 등록
+	protected void UserRegistration(String id, String password) {	// 사용자 정보 등록
 		Connection conn = null;
 		Statement stmt = null;
 
@@ -118,7 +118,7 @@ public class User implements AdminAndUser {
 		return sql;
 	}
 
-	public void Search(String id) {
+	public void Search(String id, String password) {
 		Connection conn = null;
 		Statement stmt = null;
 		ResultSet rs = null;
@@ -197,7 +197,7 @@ public class User implements AdminAndUser {
 		return sql;
 	}
 	
-	private void RegisterBook(String id) {
+	protected void RegisterBook(String id, String password) {
 		Connection conn = null;
 		Statement stmt = null;
 		
@@ -211,6 +211,7 @@ public class User implements AdminAndUser {
 	     	int result = stmt.executeUpdate(sql);
 	     	System.out.println("등록완료");
 	     	stmt.close();
+	     	Login(id, password);
 	    
 		} catch(ClassNotFoundException e) {
 	    	System.out.println("드라이버 로딩 실패");
@@ -248,7 +249,7 @@ public class User implements AdminAndUser {
 		return sql;
 	}
 	
-	private static void LisgtingBook(String id) { 
+	protected static void ListingBook(String id, String password) { 
 		Connection conn = null;
 		Statement stmt = null;
 		ResultSet rs = null;
@@ -375,7 +376,7 @@ public class User implements AdminAndUser {
 	     	conn = DriverManager.getConnection(url, dbId, dbPassword);
 	     	System.out.print("삭제할 책 제목: ");
 	     	String name = sc.next();
-	     	String sql = "delete from book where name = \"" + name + "\"";
+	     	String sql = "delete from book where name = \"" + name + "\"and user_id = \"" + id + "\"";
 	     	System.out.println(sql);
 	     	stmt = conn.createStatement();
 	     	int result = stmt.executeUpdate(sql);
